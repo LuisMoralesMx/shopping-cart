@@ -6,26 +6,161 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"ProfileResponse": {
+			"ProductEntity": {
 				"properties": {
-					"message": {
+					"id": {
 						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
-					"message"
+					"id",
+					"title",
+					"description",
+					"price"
 				],
 				"type": "object",
 				"additionalProperties": false
 			},
-			"ProductResponse": {
+			"CartItemEntity": {
 				"properties": {
-					"message": {
+					"productId": {
+						"type": "string"
+					},
+					"product": {
+						"$ref": "#/components/schemas/ProductEntity"
+					},
+					"count": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"product",
+					"count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CartEntity": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"userId": {
+						"type": "string"
+					},
+					"isDeleted": {
+						"type": "boolean"
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/CartItemEntity"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"userId",
+					"isDeleted",
+					"items"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Payment": {
+				"properties": {
+					"type": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"creditCard": {}
+				},
+				"required": [
+					"type"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Delivery": {
+				"properties": {
+					"type": {
+						"type": "string"
+					},
+					"address": {
 						"type": "string"
 					}
 				},
 				"required": [
-					"message"
+					"type",
+					"address"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ORDER_STATUS": {
+				"type": "string",
+				"enum": [
+					"created",
+					"completed"
+				]
+			},
+			"OrderEntity": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"userId": {
+						"type": "string"
+					},
+					"cartId": {
+						"type": "string"
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/CartItemEntity"
+						},
+						"type": "array"
+					},
+					"payment": {
+						"$ref": "#/components/schemas/Payment"
+					},
+					"delivery": {
+						"$ref": "#/components/schemas/Delivery"
+					},
+					"comments": {
+						"type": "string"
+					},
+					"status": {
+						"$ref": "#/components/schemas/ORDER_STATUS"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"id",
+					"userId",
+					"cartId",
+					"items",
+					"payment",
+					"delivery",
+					"comments",
+					"status",
+					"total"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -47,15 +182,8 @@
 			"post": {
 				"operationId": "CreateCart",
 				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ProfileResponse"
-								}
-							}
-						}
+					"204": {
+						"description": "No content"
 					}
 				},
 				"tags": [
@@ -72,7 +200,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ProfileResponse"
+									"$ref": "#/components/schemas/CartEntity"
 								}
 							}
 						}
@@ -87,15 +215,8 @@
 			"put": {
 				"operationId": "UpdateCart",
 				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ProfileResponse"
-								}
-							}
-						}
+					"204": {
+						"description": "No content"
 					}
 				},
 				"tags": [
@@ -107,15 +228,8 @@
 			"delete": {
 				"operationId": "DeleteCart",
 				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ProfileResponse"
-								}
-							}
-						}
+					"204": {
+						"description": "No content"
 					}
 				},
 				"tags": [
@@ -126,7 +240,7 @@
 			}
 		},
 		"/api/profile/cart/checkout": {
-			"post": {
+			"get": {
 				"operationId": "CheckoutCart",
 				"responses": {
 					"200": {
@@ -134,7 +248,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ProfileResponse"
+									"$ref": "#/components/schemas/OrderEntity"
 								}
 							}
 						}
@@ -156,7 +270,10 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ProductResponse"
+									"items": {
+										"$ref": "#/components/schemas/ProductEntity"
+									},
+									"type": "array"
 								}
 							}
 						}
@@ -178,7 +295,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ProductResponse"
+									"$ref": "#/components/schemas/ProductEntity"
 								}
 							}
 						}
@@ -188,7 +305,16 @@
 					"product"
 				],
 				"security": [],
-				"parameters": []
+				"parameters": [
+					{
+						"in": "query",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		}
 	},
