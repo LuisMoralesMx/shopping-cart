@@ -1,7 +1,6 @@
 import { Delete, Get, Post, Put, Request, Route, Tags } from "tsoa";
 import { AppService } from "../services/app.service";
-import { CartEntity, UpdateEntity } from "../schemas/cart.entity";
-import { UserEntity } from "../schemas/user.entity";
+import { CartModel } from "../schemas/cart.entity";
 import { OrderEntity } from "../schemas/order.entity";
 
 interface ProfileResponse {
@@ -14,27 +13,27 @@ export default class ProfileController {
     appService: AppService = new AppService();
 
     @Post("/")
-    public async createCart(@Request() cart: CartEntity) {
+    public async createCart(@Request() cart: CartModel) {
         this.appService.createItemCart(cart);
     }
 
     @Get("/")
-    public async getCart(): Promise<CartEntity> {
+    public async getCart(): Promise<CartModel[]> {
         return this.appService.getCart();
     }
 
     @Put("/")
-    public async updateCart(@Request() cart: UpdateEntity) {
+    public async updateCart(@Request() cart: any) {
         this.appService.updateCart(cart.itemId, cart.count);
     }
 
     @Delete("/")
-    public async deleteCart(@Request() cartId: string) {
+    public async deleteCart(@Request() cartId: number) {
         return this.appService.deleteCart(cartId);
     }
 
     @Get("/checkout")
-    public async checkoutCart(@Request() user: UserEntity, @Request() cartItems: CartEntity): Promise<OrderEntity> {
-        return this.appService.checkout(user, cartItems);
+    public async checkoutCart(@Request() userId: number): Promise<OrderEntity> {
+        return this.appService.checkout(userId);
     }
 }

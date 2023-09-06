@@ -55,7 +55,7 @@ router.delete('/api/profile/cart', async (req, res) => {
 router.get('/api/profile/cart/checkout', async (req, res) => {
     try {
         const controller = new ProfileController();
-        const response = await controller.checkoutCart(req.body['user'], req.body['cartItems']);
+        const response = await controller.checkoutCart(req.body);
         res.send(response);
         res.status(200);
     } catch (error: any) {

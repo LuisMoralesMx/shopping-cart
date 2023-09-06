@@ -1,7 +1,6 @@
 import { ProductEntity } from './product.entity';
 
 export interface CartItemEntity {
-  productId?: string;
   product: ProductEntity;
   count: number;
 }
@@ -13,7 +12,14 @@ export interface CartEntity {
   items: CartItemEntity[];
 }
 
-export interface UpdateEntity {
-  itemId: string; 
+export interface CartModel {
+  id: number;
+  userId: number;
+  isDeleted?: boolean;
+  items?: CartItemModel;
+}
+
+export interface CartItemModel {
+  productId: number;
   count: number;
 }
