@@ -5,218 +5,7 @@
 		"parameters": {},
 		"requestBodies": {},
 		"responses": {},
-		"schemas": {
-			"CartItemModel": {
-				"properties": {
-					"productId": {
-						"type": "number",
-						"format": "double"
-					},
-					"count": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"productId",
-					"count"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CartModel": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"userId": {
-						"type": "number",
-						"format": "double"
-					},
-					"isDeleted": {
-						"type": "boolean"
-					},
-					"items": {
-						"$ref": "#/components/schemas/CartItemModel"
-					}
-				},
-				"required": [
-					"id",
-					"userId"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"BatchPayload": {
-				"properties": {
-					"count": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"count"
-				],
-				"type": "object",
-				"description": "Batch Payload for updateMany & deleteMany & createMany"
-			},
-			"ProductEntity": {
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"title": {
-						"type": "string"
-					},
-					"description": {
-						"type": "string"
-					},
-					"price": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"id",
-					"title",
-					"description",
-					"price"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CartItemEntity": {
-				"properties": {
-					"product": {
-						"$ref": "#/components/schemas/ProductEntity"
-					},
-					"count": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"product",
-					"count"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Payment": {
-				"properties": {
-					"type": {
-						"type": "string"
-					},
-					"address": {
-						"type": "string"
-					},
-					"creditCard": {}
-				},
-				"required": [
-					"type"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Delivery": {
-				"properties": {
-					"type": {
-						"type": "string"
-					},
-					"address": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"type",
-					"address"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ORDER_STATUS": {
-				"type": "string",
-				"enum": [
-					"created",
-					"completed"
-				]
-			},
-			"OrderEntity": {
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"userId": {
-						"type": "string"
-					},
-					"cartId": {
-						"type": "string"
-					},
-					"items": {
-						"items": {
-							"$ref": "#/components/schemas/CartItemEntity"
-						},
-						"type": "array"
-					},
-					"payment": {
-						"$ref": "#/components/schemas/Payment"
-					},
-					"delivery": {
-						"$ref": "#/components/schemas/Delivery"
-					},
-					"comments": {
-						"type": "string"
-					},
-					"status": {
-						"$ref": "#/components/schemas/ORDER_STATUS"
-					},
-					"total": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"id",
-					"userId",
-					"cartId",
-					"items",
-					"payment",
-					"delivery",
-					"comments",
-					"status",
-					"total"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ProductModel": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"title": {
-						"type": "string"
-					},
-					"description": {
-						"type": "string"
-					},
-					"price": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"id",
-					"title",
-					"description",
-					"price"
-				],
-				"type": "object",
-				"additionalProperties": false
-			}
-		},
+		"schemas": {},
 		"securitySchemes": {}
 	},
 	"info": {
@@ -250,12 +39,7 @@
 						"description": "Ok",
 						"content": {
 							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/CartModel"
-									},
-									"type": "array"
-								}
+								"schema": {}
 							}
 						}
 					}
@@ -282,45 +66,8 @@
 			"delete": {
 				"operationId": "DeleteCart",
 				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"deletedCartItems": {
-											"$ref": "#/components/schemas/BatchPayload"
-										},
-										"deletedCart": {
-											"properties": {
-												"isDeleted": {
-													"type": "boolean"
-												},
-												"userId": {
-													"type": "number",
-													"format": "double"
-												},
-												"id": {
-													"type": "number",
-													"format": "double"
-												}
-											},
-											"required": [
-												"isDeleted",
-												"userId",
-												"id"
-											],
-											"type": "object"
-										}
-									},
-									"required": [
-										"deletedCartItems",
-										"deletedCart"
-									],
-									"type": "object"
-								}
-							}
-						}
+					"204": {
+						"description": "No content"
 					}
 				},
 				"tags": [
@@ -338,9 +85,7 @@
 						"description": "Ok",
 						"content": {
 							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/OrderEntity"
-								}
+								"schema": {}
 							}
 						}
 					}
@@ -360,12 +105,7 @@
 						"description": "Ok",
 						"content": {
 							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/ProductModel"
-									},
-									"type": "array"
-								}
+								"schema": {}
 							}
 						}
 					}
@@ -385,9 +125,7 @@
 						"description": "Ok",
 						"content": {
 							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ProductModel"
-								}
+								"schema": {}
 							}
 						}
 					}
@@ -402,8 +140,7 @@
 						"name": "id",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"type": "string"
 						}
 					}
 				]

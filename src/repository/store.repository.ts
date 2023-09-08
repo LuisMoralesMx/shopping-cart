@@ -1,13 +1,11 @@
-import { CartEntity, CartItemEntity } from '../schemas/cart.entity';
-
 export class RepositoryService {
-  cartStored: CartEntity;
+  cartStored: any;
 
-  fetchItems(): CartEntity {
+  fetchItems(): any {
     return this.cartStored;
   }
 
-  storeItem(item: CartItemEntity) {
+  storeItem(item: any) {
     if (item !== null && item.count > 1) {
       this.cartStored.items.push(item);
     }

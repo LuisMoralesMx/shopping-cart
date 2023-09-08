@@ -1,25 +1,40 @@
-import { ProductEntity } from './product.entity';
+import mongoose from "mongoose";
+import { Product } from "./product.entity";
 
-export interface CartItemEntity {
-  product: ProductEntity;
-  count: number;
-}
+// Cart Item Model
+const CartItemSchema = new mongoose.Schema({
+  product: {
+    type: [Product.schema],
+    required: true,
+  },
+  count: {
+    type: Number,
+    required: true,
+  },
+});
 
-export interface CartEntity {
-  id: string;
-  userId: string;
-  isDeleted: boolean;
-  items: CartItemEntity[];
-}
+export const CartItem = mongoose.model("CartItem", CartItemSchema);
+module.exports = { CartItem };
 
-export interface CartModel {
-  id: number;
-  userId: number;
-  isDeleted?: boolean;
-  items?: CartItemModel;
-}
+// Cart Model
+const CartSchema = new mongoose.Schema({
+  id: {
+    type: String,
+    required: true,
+  },
+  userId: {
+    type: String,
+    required: true,
+  },
+  isDeleted: {
+    type: Boolean,
+    required: true,
+  },
+  items: {
+    type: [CartItem.schema],
+    required: false,
+  },
+});
 
-export interface CartItemModel {
-  productId: number;
-  count: number;
-}
+export const Cart = mongoose.model("Cart", CartSchema);
+module.exports = { Cart };

@@ -38,10 +38,3 @@ $ npm run dev
 # create build
 $ npm run build
 ```
-
-## Prisma
-
-<p> 
-  To update/recreate the datatabase schemas please follow the instructions at Prisma website: 
-  https://www.prisma.io/docs/getting-started/quickstart
-</p>
