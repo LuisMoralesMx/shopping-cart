@@ -20,6 +20,10 @@
   <li>Return single .</li>
 </ul>
 
+# Swagger
+
+<p>API documentation can be found at: http://localhost:8000/docs/</p>
+
 ## Installation
 
 ```bash
