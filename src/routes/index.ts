@@ -1,6 +1,7 @@
 import express from "express";
 import ProfileController from "../controllers/profile";
 import ProductsController from "../controllers/products";
+import UserController from "../controllers/user";
 
 const router = express.Router();
 
@@ -43,7 +44,7 @@ router.put('/api/profile/cart', async (req, res) => {
 router.delete('/api/profile/cart', async (req, res) => {
     try {
         const controller = new ProfileController();
-        const response = await controller.deleteCart(req.body);
+        const response = await controller.deleteCart(req.user, req.body);
         res.send(response);
         res.status(200);
     } catch (error: any) {
@@ -89,5 +90,40 @@ router.get('/api/products/productId', async (req, res) => {
     }
 });
 
+router.get('/user', async (req, res) => {
+    try {
+        const controller = new UserController();
+        const response = await controller.users()
+        res.send(response);
+        res.status(201);
+    } catch (error: any) {
+        res.send(error.status);
+        res.status(error.message)
+    }
+});
+
+router.get('/user/login', async (req, res) => {
+    try {
+        const controller = new UserController();
+        const response = await controller.login(req.body)
+        res.send(response);
+        res.status(201);
+    } catch (error: any) {
+        res.send(error.status);
+        res.status(error.message)
+    }
+});
+
+router.post('/user/register', async (req, res) => {
+    try {
+        const controller = new UserController();
+        const response = await controller.register(req.body)
+        res.send(response);
+        res.status(201);
+    } catch (error: any) {
+        res.send(error.status);
+        res.status(error.message)
+    }
+});
 
 export default router;

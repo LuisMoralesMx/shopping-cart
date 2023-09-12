@@ -1,5 +1,6 @@
 import { Delete, Get, Post, Put, Request, Route, Tags } from "tsoa";
 import { AppService } from "../services/app.service";
+import { CurrentUser } from "../middleware/auth";
 
 @Route("api/profile/cart")
 @Tags('cart')
@@ -22,8 +23,14 @@ export default class ProfileController {
     }
 
     @Delete("/")
-    public async deleteCart(@Request() cartId: string) {
-        return this.appService.deleteCart(cartId);
+    public async deleteCart(@Request() req: CurrentUser, @Request() cartId: string) {
+        console.log(req);
+
+        if(req.role === 'admin') {
+            return this.appService.deleteCart(cartId);
+        } else {
+            throw { status: 403, message: "User does not have enough permissions." }
+        }     
     }
 
     @Get("/checkout")
