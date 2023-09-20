@@ -2,5 +2,3 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 npx husky add .husky/pre-commit "npx lint-staged"
-npx lint-staged
-npx lint-staged

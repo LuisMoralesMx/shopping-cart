@@ -21,11 +21,6 @@
     "ext": "ts",
     "exec": "ts-node src/index.ts"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "prettier --write . && git add -A ."
-    }
-  },
   "lint-staged": {
     "**/*.js": "prettier --write --ignore-unknown"
   },
