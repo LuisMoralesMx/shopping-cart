@@ -5,6 +5,8 @@ import swaggerUi from "swagger-ui-express";
 import Router from "./routes";
 import mongoose from "mongoose";
 import { CurrentUser, verifyToken } from "./middleware/auth";
+import { logger } from "./utils/logger";
+import responseTime from 'response-time'
 
 declare global {
   namespace Express {
@@ -19,6 +21,7 @@ const app: Application = express();
 app.use(express.json());
 app.use(morgan("tiny"));
 app.use(express.static("public"));
+app.use(responseTime());
 app.use(
   "/docs",
   swaggerUi.serve,
@@ -39,7 +42,7 @@ const start = async () => {
     const MONGO_URI = process.env.MONGO_URI || 'localhost';
     const MONGO_PORT = process.env.MONGO_PORT || 27017;
     const MONGO_DB = process.env.MONGO_DB || 'shoppingcart-mg';
-    const server = app.listen(API_PORT, () => console.log("Server started on port", API_PORT));
+    const server = app.listen(API_PORT, () => logger.info(`Server started and running on port: ${API_PORT}`));
 
     // Connect to MongoDB
     await mongoose.connect(`mongodb://${MONGO_URI}:${MONGO_PORT}/${MONGO_DB}`);
@@ -58,15 +61,16 @@ const start = async () => {
     });
 
     function shutdown() {
-      console.log('Received kill signal, shutting down gracefully');
+      logger.info('Received kill signal, shutting down gracefully');
 
       server.close(() => {
-        console.log('Closed out remaining connections');
+        logger.info('Closed out remaining connections');
+
         process.exit(0);
       });
 
       setTimeout(() => {
-        console.error('Could not close connections in time, forcefully shutting down');
+        logger.error('Could not close connections in time, forcefully shutting down');
         process.exit(1);
       }, 20000);
 
@@ -82,11 +86,8 @@ const start = async () => {
     process.on('SIGTERM', shutdown);
     process.on('SIGINT', shutdown);
 
-
-
-    // app.listen(API_PORT, () => console.log("Server started on port", API_PORT));
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     process.exit(1);
   }
 };
