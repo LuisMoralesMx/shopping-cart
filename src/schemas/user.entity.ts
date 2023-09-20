@@ -2,11 +2,11 @@ import mongoose from "mongoose";
 
 // Model
 export interface IUser {
-  id: string,
-  name: string,
-  email: string,
-  password: string,
-  role: string
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  role: string;
 }
 
 // User Schema
@@ -30,7 +30,7 @@ const UserSchema = new mongoose.Schema({
   role: {
     type: String,
     required: true,
-  }
+  },
 });
 
 export const User = mongoose.model("User", UserSchema);
