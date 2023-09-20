@@ -2,6 +2,7 @@ import express from "express";
 import ProfileController from "../controllers/profile";
 import ProductsController from "../controllers/products";
 import UserController from "../controllers/user";
+import HealthController from "../controllers/health";
 
 const router = express.Router();
 
@@ -36,8 +37,8 @@ router.put('/api/profile/cart', async (req, res) => {
         res.send(response);
         res.status(200);
     } catch (error: any) {
-        res.send(error.status);
-        res.status(error.message)
+        res.send(error.message);
+        res.status(error.status)
     }
 });
 
@@ -48,8 +49,8 @@ router.delete('/api/profile/cart', async (req, res) => {
         res.send(response);
         res.status(200);
     } catch (error: any) {
-        res.send(error.status);
-        res.status(error.message)
+        res.send(error.message);
+        res.status(error.status)
     }
 });
 
@@ -60,8 +61,8 @@ router.get('/api/profile/cart/checkout', async (req, res) => {
         res.send(response);
         res.status(200);
     } catch (error: any) {
-        res.send(error.status);
-        res.status(error.message)
+        res.send(error.message);
+        res.status(error.status)
     }
 });
 
@@ -72,8 +73,8 @@ router.get('/api/products', async (_req, res) => {
         res.send(response);
         res.status(200);
     } catch (error: any) {
-        res.send(error.status);
-        res.status(error.message)
+        res.send(error.message);
+        res.status(error.status)
     }
 });
 
@@ -85,8 +86,8 @@ router.get('/api/products/productId', async (req, res) => {
         res.send(response);
         res.status(200);
     } catch (error: any) {
-        res.send(error.status);
-        res.status(error.message)
+        res.send(error.message);
+        res.status(error.status)
     }
 });
 
@@ -97,8 +98,8 @@ router.get('/user', async (req, res) => {
         res.send(response);
         res.status(201);
     } catch (error: any) {
-        res.send(error.status);
-        res.status(error.message)
+        res.send(error.message);
+        res.status(error.status)
     }
 });
 
@@ -109,8 +110,8 @@ router.get('/user/login', async (req, res) => {
         res.send(response);
         res.status(201);
     } catch (error: any) {
-        res.send(error.status);
-        res.status(error.message)
+        res.send(error.message);
+        res.status(error.status)
     }
 });
 
@@ -121,9 +122,16 @@ router.post('/user/register', async (req, res) => {
         res.send(response);
         res.status(201);
     } catch (error: any) {
-        res.send(error.status);
-        res.status(error.message)
+        res.send(error.message);
+        res.status(error.status)
     }
+});
+
+router.get('/health', async (req, res) => {
+    const controller = new HealthController();
+    const response = await controller.health();
+    res.send(response.message)
+    res.status(response.status);
 });
 
 export default router;

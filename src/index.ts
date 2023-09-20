@@ -8,39 +8,87 @@ import { CurrentUser, verifyToken } from "./middleware/auth";
 
 declare global {
   namespace Express {
-      interface Request {
-          user: CurrentUser
-      }
+    interface Request {
+      user: CurrentUser
+    }
   }
 }
 
-const PORT = process.env.PORT || 8000;
 const app: Application = express();
 
 app.use(express.json());
 app.use(morgan("tiny"));
 app.use(express.static("public"));
 app.use(
-    "/docs",
-    swaggerUi.serve,
-    swaggerUi.setup(undefined, {
-        swaggerOptions: {
-            url: "/swagger.json",
-        },
-    })
+  "/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(undefined, {
+    swaggerOptions: {
+      url: "/swagger.json",
+    },
+  })
 );
 app.use('/api', verifyToken)
 app.use(Router);
 
 const start = async () => {
-    try {
-      dotenv.config();
-      await mongoose.connect("mongodb://127.0.0.1:27017/shoppingcart-mg");
-      app.listen(PORT, () => console.log("Server started on port", PORT));
-    } catch (error) {
-      console.error(error);
-      process.exit(1);
+  try {
+    dotenv.config();
+
+    const API_PORT = process.env.API_PORT || 8000;
+    const MONGO_URI = process.env.MONGO_URI || 'localhost';
+    const MONGO_PORT = process.env.MONGO_PORT || 27017;
+    const MONGO_DB = process.env.MONGO_DB || 'shoppingcart-mg';
+    const server = app.listen(API_PORT, () => console.log("Server started on port", API_PORT));
+
+    // Connect to MongoDB
+    await mongoose.connect(`mongodb://${MONGO_URI}:${MONGO_PORT}/${MONGO_DB}`);
+
+    // Graceful shutdown
+    let connections: any = [];
+
+    server.on('connection', (connection) => {
+      // register connections
+      connections.push(connection);
+
+      // remove/filter closed connections
+      connection.on('close', () => {
+        connections = connections.filter((currentConnection: any) => currentConnection !== connection);
+      });
+    });
+
+    function shutdown() {
+      console.log('Received kill signal, shutting down gracefully');
+
+      server.close(() => {
+        console.log('Closed out remaining connections');
+        process.exit(0);
+      });
+
+      setTimeout(() => {
+        console.error('Could not close connections in time, forcefully shutting down');
+        process.exit(1);
+      }, 20000);
+
+      // end current connections
+      connections.forEach((connection: any) => connection.end());
+
+      // then destroy connections
+      setTimeout(() => {
+        connections.forEach((connection: any) => connection.destroy());
+      }, 10000);
     }
-  };
+
+    process.on('SIGTERM', shutdown);
+    process.on('SIGINT', shutdown);
+
+
+
+    // app.listen(API_PORT, () => console.log("Server started on port", API_PORT));
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
+};
 
 start();
