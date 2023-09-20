@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  app:
+    container_name: shopping-cart-automation
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: production
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      NODE_ENV: production
+      MONGO_URI: mongodb://mongo/shoppingcart-mg
+    depends_on:
+      - mongo
+    networks:
+      - my_network
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    restart: always
+    volumes:
+      - ./data/mongo:/data/db
+    networks:
+      - my_network
+networks:
+  my_network:
